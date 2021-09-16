@@ -1,5 +1,5 @@
 # habr_optimizers
-This repository contains code for article on ![Habr](https://habr.com).
+This repository contains code for article on [Habr](https://habr.com).
 
 Experiments are conducted on two tasks (code for multi-label classification is not published):
 * toy task: classification on MNIST dataset
@@ -11,7 +11,7 @@ For each task there are three types of experiments:
 * fixed learning rate, fixed batch size, changing learning rate schedulers
 
 ### Requires:
-1) clone MADGRAD optimizer in common folder, ![actual commit](https://github.com/facebookresearch/madgrad/commit/71da2a48e738b76a29d3e33c3cadb4775cdf9e91):
+1) clone MADGRAD optimizer in common folder, [actual commit](https://github.com/facebookresearch/madgrad/commit/71da2a48e738b76a29d3e33c3cadb4775cdf9e91):
 
 ### Build MNIST experiment:
 `docker build . -f docker/mnist/Dockerfile -t "habr_mnist"`
