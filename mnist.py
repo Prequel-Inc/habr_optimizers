@@ -1,4 +1,3 @@
-import argparse
 import os
 from time import time
 import numpy as np
@@ -29,10 +28,8 @@ def train_iter_mnist(bench):
         loss.backward(create_graph=True)
         bench.optimizer.step()
 
-        if bench.sched_step_note == 'cyclic':
+        if bench.sched_step_note in ['cyclic', 'cosine']:
             bench.scheduler.step()
-        if bench.sched_step_note == 'cosine':
-            bench.scheduler.step()  # self.curr_epoch + batch_idx / self.train_length
 
         if batch_idx % bench.log_interval == 0:
             losses.append(loss.item())
@@ -83,12 +80,6 @@ if __name__ == '__main__':
         cfg = Box(yaml.safe_load(ymlfile))
 
     cfg.args = args
-
-    if args.server:
-        cfg.path.data_path = cfg.path.server.data_path
-    else:
-        cfg.path.data_path = cfg.path.local.data_path
-
     cfg.logdir = os.path.join(cfg.path.data_path, cfg.path.logdir)
 
     train_kwargs = get_dataloader_kwargs(cfg, args.batch_size)

@@ -17,13 +17,11 @@ For each task there are three types of experiments:
 `docker build . -f docker/mnist/Dockerfile -t "habr_mnist"`
 
 ### Run MNIST experiment:
-`docker run --gpus all -it --cpuset-cpus 0-9 -v /home/mbelyalova/data:/app/data --ipc=host "habr_mnist" python3 mnist.py --lr 0.001 --batch-size 8 --server`
+`docker run --gpus all -it --cpuset-cpus 0-9 -v /path/to/data:/app/data --ipc=host "habr_mnist" python3 mnist.py --lr 0.001 --batch-size 8`
 
 
 ### Parameters (located in common/setup.py):
-* server_config_path Path to config.yml that is located on server in docker
-* local_config_path Path to config.yml that is located on local machine
-* server Whether is code runs on server (to select proper pathes)
+* config_path Path to config.yml
 * batch-size Batch size
 * lr Learning rate
 * gpu-num Number of GPU
@@ -38,7 +36,7 @@ For each task there are three types of experiments:
 ### Repository structure:
 * common
   * benchmark.py Contains trainloop and class for data that is shared between different models in one run.
-  * models.py Models for MNIST and mobile classifier.
+  * models.py Model for MNIST.
   * optimizers.py List of optimizers.
   * schedulers.py List of schedulers and their parameters.
   * setup.py CLI for both types of experiments and some common preparation.

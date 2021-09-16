@@ -1,9 +1,9 @@
 import torch
 import torch_optimizer as optim
-from common.madgrad.madgrad import MADGRAD
+# from common.madgrad.madgrad import MADGRAD
 
 optimizers = {
-    "MADGRAD": MADGRAD,
+    "MADGRAD": optim.MADGRAD,
     "Adam": torch.optim.Adam,
     "Adadelta": torch.optim.Adadelta,
     "AdamW": torch.optim.AdamW,
