@@ -1,5 +1,6 @@
-from torch.optim.lr_scheduler import StepLR, ReduceLROnPlateau, \
-    CosineAnnealingLR, CosineAnnealingWarmRestarts, CyclicLR, OneCycleLR
+from torch.optim.lr_scheduler import (CosineAnnealingLR,
+                                      CosineAnnealingWarmRestarts, CyclicLR,
+                                      OneCycleLR, ReduceLROnPlateau, StepLR)
 
 
 def get_schedulers_dict(cfg, samples_per_epoch):

@@ -1,21 +1,32 @@
 import os
 from time import time
+
 import numpy as np
-from tqdm import tqdm
-import yaml
-from box import Box
 import torch
 import torch.nn.functional as F
+import yaml
+from box import Box
+from sklearn.metrics import (accuracy_score, f1_score, precision_score,
+                             recall_score)
 from torchvision import datasets, transforms
-from sklearn.metrics import precision_score, recall_score, accuracy_score, f1_score
+from tqdm import tqdm
+
+from common.benchmark import OptimizersBenchmark, run_benchmark
+from common.models import Net
 from common.optimizers import optimizers
 from common.schedulers import get_schedulers_dict
-from common.benchmark import OptimizersBenchmark, run_benchmark
 from common.setup import setup
-from common.models import Net
 
 
 def train_iter_mnist(bench):
+    """Train iteration for experiment on MNIST.
+
+    Args:
+        bench (OptimizersBenchmark): Class for benchmarking.
+
+    Returns:
+        [List, float]: List of losses, iteration time
+    """
     bench.model.train()
     losses = []
     t1 = time()
@@ -38,6 +49,14 @@ def train_iter_mnist(bench):
 
 
 def test_iter_mnist(bench):
+    """Test iteration for experiment on MNIST.
+
+    Args:
+        bench (OptimizersBenchmark): Class with setup for benchmarking.
+
+    Returns:
+        [List, Dict]: List of losses, dictionary with metric values
+    """
     bench.model.eval()
     losses = []
     targets = []
@@ -76,19 +95,24 @@ def get_dataloader_kwargs(cfg, batch_size):
 if __name__ == '__main__':
     args = setup()
 
+    # read configuration from file
     with open(args.config_path, "r") as ymlfile:
         cfg = Box(yaml.safe_load(ymlfile))
 
     cfg.args = args
     cfg.logdir = os.path.join(cfg.path.data_path, cfg.path.logdir)
 
+    # get parameters for dataloaders from config and args
     train_kwargs = get_dataloader_kwargs(cfg, args.batch_size)
     test_kwargs = get_dataloader_kwargs(cfg, cfg.data.test_batch_size)
 
+    # crate transform for data
     transform = transforms.Compose([
         transforms.ToTensor(),
         transforms.Normalize((cfg.data.mnist_mean,), (cfg.data.mnist_std,))
     ])
+
+    # train and test dataset
     dataset1 = datasets.MNIST(cfg.path.data_path, train=True, download=True,
                               transform=transform)
     dataset2 = datasets.MNIST(cfg.path.data_path, train=False,
@@ -99,6 +123,7 @@ if __name__ == '__main__':
     schedulers_dict = get_schedulers_dict(cfg=cfg,
                                           samples_per_epoch=len(train_loader))
 
+    # create class with setup for all experiments
     bench = OptimizersBenchmark(optimizers_dict=optimizers,
                                 schedulers_dict=schedulers_dict,
                                 train_loader=train_loader,
@@ -106,4 +131,5 @@ if __name__ == '__main__':
                                 model_class=Net,
                                 cfg=cfg)
 
+    # run all experiments
     run_benchmark(bench, train_iter_mnist, test_iter_mnist, cfg)

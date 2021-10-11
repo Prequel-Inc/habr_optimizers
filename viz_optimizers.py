@@ -1,10 +1,10 @@
 # this code taken from https://github.com/jettify/pytorch-optimizer and modified
 
 import math
-import numpy as np
-import torch
 
 import matplotlib.pyplot as plt
+import numpy as np
+import torch
 import torch_optimizer as optim
 from hyperopt import fmin, hp, tpe
 from madgrad.madgrad import MADGRAD
@@ -93,7 +93,8 @@ def plot_rastrigin(grad_iter, optimizer_name, lr):
     ax = fig.add_subplot(1, 1, 1)
     ax.contour(X, Y, Z, 20, cmap='jet')
     ax.plot(iter_x, iter_y, color='r', marker='x')
-    dist = np.linalg.norm(np.array(minimum) - np.array([iter_x[-1], iter_y[-1]]))
+    dist = np.linalg.norm(np.array(minimum) -
+                          np.array([iter_x[-1], iter_y[-1]]))
     ax.set_title(
         f'Rastrigin func: {optimizer_name} with {len(iter_x)} '
         f'iterations, lr={lr:.6},\nlast point: ({iter_x[-1]:.4}, {iter_y[-1]:.4}), distance to min: {dist:.4}'
@@ -120,7 +121,8 @@ def plot_rosenbrok(grad_iter, optimizer_name, lr):
     ax.contour(X, Y, Z, 90, cmap='jet')
     ax.plot(iter_x, iter_y, color='r', marker='x')
 
-    dist = np.linalg.norm(np.array(minimum) - np.array([iter_x[-1], iter_y[-1]]))
+    dist = np.linalg.norm(np.array(minimum) -
+                          np.array([iter_x[-1], iter_y[-1]]))
 
     ax.set_title(
         f'Rosenbrock func: {optimizer_name} with {len(iter_x)} '
@@ -162,7 +164,8 @@ def execute_experiments(
             {'lr': best['lr']},
             num_iter=500,
         )
-        last_point, dist = plot_func(steps, optimizer_class.__name__, best['lr'])
+        last_point, dist = plot_func(
+            steps, optimizer_class.__name__, best['lr'])
         last_points.append(last_point)
         dists.append(dist)
         names.append(optimizer_class.__name__)

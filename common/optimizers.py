@@ -1,5 +1,6 @@
 import torch
 import torch_optimizer as optim
+
 from common.madgrad.madgrad import MADGRAD
 
 optimizers = {

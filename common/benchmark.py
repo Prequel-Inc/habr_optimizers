@@ -1,13 +1,25 @@
 import os
 import shutil
+
 import numpy as np
 import torch
-from torch.utils.tensorboard import SummaryWriter
 import torch_optimizer as optim
+from torch.utils.tensorboard import SummaryWriter
+
 from common.optimizers import opts_without_momentum
 
 
 def run_benchmark(bench, train_iter, test_iter, cfg):
+    """Run experiments on provided optimizers, schedulers,
+    dataloaders (in bench class) with provided train and test iteration
+    functions.
+
+    Args:
+        bench (OptimizersBenchmark): Class with setup for benchmarking.
+        train_iter (function): Function for train iteration.
+        test_iter (function): Function for test iteration.
+        cfg (Box): Configuration.
+    """
     n_sched = cfg.train.n_sched
     ix_sched = cfg.args.ix_sched
     bench.train_iter_func = train_iter
@@ -38,6 +50,11 @@ def run_benchmark(bench, train_iter, test_iter, cfg):
 
 
 def trainloop(bench):
+    """Trainloop for single optimizer.
+
+    Args:
+        bench (OptimizersBenchmark): Class with setup for benchmarking.
+    """
     bench.model = bench.model_class().to(bench.device)
 
     if bench.sched_data is not None:
@@ -99,6 +116,12 @@ def trainloop(bench):
 
 
 class OptimizersBenchmark():
+    """
+        Class that contains all data for all experiments. It has current
+        state for one experiment and data that should be shared
+        between experiments.
+    """
+
     def __init__(self, optimizers_dict, schedulers_dict,
                  train_loader, test_loader, model_class, cfg):
         args = cfg.args
